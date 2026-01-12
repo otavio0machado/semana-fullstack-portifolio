@@ -27,7 +27,7 @@ export const CountdownTimer: React.FC = () => {
   // CONFIG: Date logic is here. Sets timer for 5 days from now.
   const [targetDate] = useState(() => {
     const date = new Date();
-    date.setDate(date.getDate() + 5); 
+    date.setDate(date.getDate() + 5);
     return date;
   });
 
@@ -41,18 +41,25 @@ export const CountdownTimer: React.FC = () => {
   }, [targetDate]);
 
   const TimeUnit: React.FC<{ value: number; label: string }> = ({ value, label }) => (
-    <div className="flex flex-col items-center mx-1 md:mx-2">
-      {/* High Contrast Box */}
-      <div className="bg-neutral-900 border-2 border-neutral-800 rounded-md p-3 w-[70px] h-[70px] md:w-[90px] md:h-[90px] flex items-center justify-center shadow-2xl relative overflow-hidden group">
-        
-        {/* Subtle red glow on background */}
-        <div className="absolute inset-0 bg-red-600/5 group-hover:bg-red-600/10 transition-colors"></div>
-        
-        <span className="text-3xl md:text-5xl font-black text-white tabular-nums relative z-10">
+    <div className="flex flex-col items-center mx-2 md:mx-4 group cursor-default">
+      {/* Glassy Box */}
+      <div className="
+        relative bg-neutral-900/40 backdrop-blur-xl 
+        border border-white/10 hover:border-red-500/50 
+        rounded-2xl p-4 w-[80px] h-[80px] md:w-[110px] md:h-[110px] 
+        flex items-center justify-center 
+        shadow-[0_8px_32px_0_rgba(0,0,0,0.36)] 
+        transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-red-900/20
+      ">
+
+        {/* Inner Glow */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-2xl pointer-events-none" />
+
+        <span className="text-4xl md:text-6xl font-black text-white tabular-nums relative z-10 drop-shadow-lg tracking-tight">
           {value.toString().padStart(2, '0')}
         </span>
       </div>
-      <span className="text-[10px] md:text-xs text-red-500 font-bold uppercase tracking-widest mt-2">
+      <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] mt-3 group-hover:text-red-400 transition-colors text-neutral-500">
         {label}
       </span>
     </div>

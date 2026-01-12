@@ -7,7 +7,7 @@ export const OptInForm: React.FC = () => {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
   const [error, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
-  
+
   // Ref to trigger shake animation via class manipulation logic
   const [shouldShake, setShouldShake] = useState(false);
 
@@ -54,9 +54,12 @@ export const OptInForm: React.FC = () => {
   return (
     <>
       <div className="w-full max-w-lg mx-auto mt-6 px-4 md:px-0">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div className="relative group">
             <label htmlFor="email" className="sr-only">Seu melhor e-mail</label>
+            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+              <div className="w-1 h-1 rounded-full bg-neutral-500 group-focus-within:bg-red-500 transition-colors" />
+            </div>
             <input
               id="email"
               type="email"
@@ -68,21 +71,26 @@ export const OptInForm: React.FC = () => {
               }}
               disabled={status === 'loading'}
               className={`
-                w-full h-14 px-6 bg-neutral-900 border-2 rounded-lg text-lg text-white placeholder-neutral-500 
-                focus:outline-none focus:ring-4 focus:ring-red-900/20 transition-all duration-200
-                ${error ? 'border-red-600 focus:border-red-600' : 'border-neutral-800 focus:border-red-500'}
+                w-full h-16 pl-10 pr-6 
+                bg-neutral-900/50 backdrop-blur-sm 
+                border border-neutral-800 
+                rounded-xl text-xl text-white placeholder-neutral-500 
+                focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50
+                transition-all duration-300
+                shadow-inner
+                ${error ? 'border-red-600/80 focus:border-red-600' : 'hover:border-neutral-700'}
                 ${shouldShake ? 'animate-shake' : ''}
               `}
             />
             {error && (
-              <div className="absolute right-4 top-4 text-red-500 animate-fade-in">
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 text-red-500 animate-fade-in bg-black/50 rounded-full p-1">
                 <AlertCircle className="w-6 h-6" />
               </div>
             )}
           </div>
 
           {error && (
-            <p className="text-red-500 text-sm font-medium text-center animate-fade-in -mt-2">
+            <p className="text-red-400 text-sm font-medium text-center animate-fade-in -mt-2 bg-red-950/20 py-1 px-3 rounded-full mx-auto inline-block border border-red-900/30">
               {error}
             </p>
           )}
@@ -90,20 +98,36 @@ export const OptInForm: React.FC = () => {
           <button
             type="submit"
             disabled={status === 'loading'}
-            className="w-full h-16 bg-red-600 hover:bg-red-500 text-white font-black text-lg md:text-xl uppercase tracking-wider rounded-lg shadow-[0_0_20px_rgba(220,38,38,0.4)] hover:shadow-[0_0_30px_rgba(220,38,38,0.6)] transform transition-all active:scale-[0.98] flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed"
+            className="
+                group relative w-full h-20 
+                bg-gradient-to-r from-red-700 to-red-600 hover:from-red-600 hover:to-red-500 
+                text-white font-black text-xl md:text-2xl uppercase tracking-widest 
+                rounded-xl 
+                shadow-[0_0_40px_-10px_rgba(220,38,38,0.5)] hover:shadow-[0_0_60px_-10px_rgba(220,38,38,0.7)]
+                transform transition-all duration-300 hover:-translate-y-1 active:scale-[0.98] 
+                flex items-center justify-center gap-4 
+                disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none
+                overflow-hidden
+            "
           >
-            {status === 'loading' ? (
-              <Loader2 className="w-8 h-8 animate-spin" />
-            ) : (
-              <>
-                <span>Garantir Minha Vaga Grátis</span>
-                <ArrowRight className="w-6 h-6 md:w-8 md:h-8" />
-              </>
-            )}
+            {/* Shine Effect */}
+            <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent z-0" />
+
+            <div className="relative z-10 flex items-center gap-3">
+              {status === 'loading' ? (
+                <Loader2 className="w-8 h-8 animate-spin" />
+              ) : (
+                <>
+                  <span className="drop-shadow-md">Garantir Minha Vaga</span>
+                  <ArrowRight className="w-6 h-6 md:w-8 md:h-8 group-hover:translate-x-1 transition-transform" />
+                </>
+              )}
+            </div>
           </button>
 
-          <p className="text-center text-neutral-500 text-xs">
-            🔒 100% Livre de Spam. Seus dados estão seguros.
+          <p className="text-center text-neutral-500 text-xs font-medium flex items-center justify-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-green-500/50"></span>
+            100% Livre de Spam. Seus dados estão seguros.
           </p>
         </form>
       </div>
@@ -112,14 +136,14 @@ export const OptInForm: React.FC = () => {
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4 animate-fade-in">
           {/* Backdrop */}
-          <div 
+          <div
             className="absolute inset-0 bg-black/90 backdrop-blur-sm"
             onClick={handleCloseModal}
           ></div>
 
           {/* Modal Content */}
           <div className="relative bg-neutral-900 border border-neutral-800 rounded-2xl p-8 max-w-md w-full text-center shadow-2xl shadow-green-900/20 scale-100 animate-in fade-in zoom-in duration-300">
-            <button 
+            <button
               onClick={handleCloseModal}
               className="absolute top-4 right-4 text-neutral-500 hover:text-white transition-colors"
             >
@@ -135,9 +159,9 @@ export const OptInForm: React.FC = () => {
             <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
               Inscrição Confirmada!
             </h3>
-            
+
             <p className="text-neutral-400 text-lg mb-8 leading-relaxed">
-              Enviamos o link de acesso exclusivo para o seu e-mail: <br/>
+              Enviamos o link de acesso exclusivo para o seu e-mail: <br />
               <span className="text-white font-semibold">{email}</span>
             </p>
 
