@@ -3,44 +3,51 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Semana do FullStack - Inscrição Gratuita</title>
+    <meta name="theme-color" content="#0E0F11" />
+    <title>Semana React · 7 noites de Outubro · 100% online no YouTube</title>
+    <meta name="description" content="Sete encontros de uma hora pra entender React do zero, ao vivo no YouTube — agenda fixa, instrutores nomeados, sem promessa de mercado em 7 dias. Inscrição por e-mail é opcional." />
+
+    <meta property="og:title" content="Semana React · 7 noites de Outubro" />
+    <meta property="og:description" content="Sete noites, uma hora cada, ao vivo no YouTube. Sem countdown fake e sem 'vagas limitadas'." />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         theme: {
           extend: {
             colors: {
-              brand: {
-                red: '#dc2626', // High urgency red
-                black: '#0a0a0a',
-                darkGray: '#171717',
-              },
-            },
-            animation: {
-              'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-              'shake': 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both',
-            },
-            keyframes: {
-              shake: {
-                '10%, 90%': { transform: 'translate3d(-1px, 0, 0)' },
-                '20%, 80%': { transform: 'translate3d(2px, 0, 0)' },
-                '30%, 50%, 70%': { transform: 'translate3d(-4px, 0, 0)' },
-                '40%, 60%': { transform: 'translate3d(4px, 0, 0)' }
-              }
+              ink: '#0E0F11',
+              'ink-soft': '#16181B',
+              'ink-line': '#23262C',
+              chalk: '#F4EFE6',
+              'chalk-soft': '#B5B0A7',
+              'chalk-mute': '#6E6B65',
+              react: '#61DAFB',
+              clay: '#C45A2C',
             },
             fontFamily: {
               sans: ['Inter', 'sans-serif'],
-            }
-          },
+              mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+            },
+          }
         },
       }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
       body {
         font-family: 'Inter', sans-serif;
-        background-color: #020202; /* Absolute Black */
-        color: #fff;
+        background-color: #0E0F11;
+        color: #F4EFE6;
+      }
+      .rule { border-color: #23262C; }
+      .label-mono {
+        font-family: 'JetBrains Mono', ui-monospace, monospace;
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
       }
     </style>
   <script type="importmap">
