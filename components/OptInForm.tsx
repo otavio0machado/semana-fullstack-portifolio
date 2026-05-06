@@ -1,183 +1,97 @@
-import React, { useState, useRef } from 'react';
-import { ArrowRight, CheckCircle2, AlertCircle, Loader2, X } from 'lucide-react';
+import React, { useState } from 'react';
+import { CheckCircle2, AlertCircle, Loader2, Bell } from 'lucide-react';
 import { subscribeToEvent } from '../services/api';
 
 export const OptInForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
   const [error, setError] = useState<string | null>(null);
-  const [showModal, setShowModal] = useState(false);
-
-  // Ref to trigger shake animation via class manipulation logic
-  const [shouldShake, setShouldShake] = useState(false);
-
-  const triggerError = (msg: string) => {
-    setError(msg);
-    setShouldShake(true);
-    setTimeout(() => setShouldShake(false), 500); // Remove animation class after duration
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    // Basic Validation
     if (!email || !email.includes('@') || email.length < 5) {
-      triggerError('Por favor, insira um e-mail válido.');
+      setError('Insira um e-mail válido.');
       return;
     }
 
     setStatus('loading');
-
     try {
       const response = await subscribeToEvent(email);
       if (response.success) {
         setStatus('success');
-        setShowModal(true); // Open the Modal
       } else {
         setStatus('idle');
-        triggerError(response.message);
+        setError(response.message);
       }
-    } catch (err) {
+    } catch {
       setStatus('idle');
-      triggerError('Ocorreu um erro. Tente novamente.');
+      setError('Algo deu errado. Tenta de novo em um minuto.');
     }
   };
 
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setStatus('idle');
-    setEmail('');
-    setError(null);
-  };
-
-  return (
-    <>
-      <div className="w-full max-w-lg mx-auto mt-6 px-4 md:px-0">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-          <div className="relative group">
-            <label htmlFor="email" className="sr-only">Seu melhor e-mail</label>
-            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-              <div className="w-1 h-1 rounded-full bg-neutral-500 group-focus-within:bg-red-500 transition-colors" />
-            </div>
-            <input
-              id="email"
-              type="email"
-              placeholder="Digite seu melhor e-mail..."
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                if (error) setError(null);
-              }}
-              disabled={status === 'loading'}
-              className={`
-                w-full h-16 pl-10 pr-6 
-                bg-neutral-900/50 backdrop-blur-sm 
-                border border-neutral-800 
-                rounded-xl text-xl text-white placeholder-neutral-500 
-                focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50
-                transition-all duration-300
-                shadow-inner
-                ${error ? 'border-red-600/80 focus:border-red-600' : 'hover:border-neutral-700'}
-                ${shouldShake ? 'animate-shake' : ''}
-              `}
-            />
-            {error && (
-              <div className="absolute right-4 top-1/2 -translate-y-1/2 text-red-500 animate-fade-in bg-black/50 rounded-full p-1">
-                <AlertCircle className="w-6 h-6" />
-              </div>
-            )}
-          </div>
-
-          {error && (
-            <p className="text-red-400 text-sm font-medium text-center animate-fade-in -mt-2 bg-red-950/20 py-1 px-3 rounded-full mx-auto inline-block border border-red-900/30">
-              {error}
+  if (status === 'success') {
+    return (
+      <div className="w-full max-w-md mx-auto mt-10 border rule bg-ink-soft p-6 text-left">
+        <div className="flex items-start gap-3">
+          <CheckCircle2 className="w-5 h-5 text-react shrink-0 mt-0.5" />
+          <div>
+            <p className="text-chalk font-medium mb-1">E-mail anotado</p>
+            <p className="text-chalk-soft text-[14px] leading-relaxed">
+              Mandamos um único e-mail no dia de cada noite, com o link da
+              transmissão e a agenda da noite. Sem newsletter, sem promoção,
+              sem &ldquo;curso premium&rdquo; depois.
             </p>
-          )}
-
-          <button
-            type="submit"
-            disabled={status === 'loading'}
-            className="
-                group relative w-full h-20 
-                bg-gradient-to-r from-red-700 to-red-600 hover:from-red-600 hover:to-red-500 
-                text-white font-black text-xl md:text-2xl uppercase tracking-widest 
-                rounded-xl 
-                shadow-[0_0_40px_-10px_rgba(220,38,38,0.5)] hover:shadow-[0_0_60px_-10px_rgba(220,38,38,0.7)]
-                transform transition-all duration-300 hover:-translate-y-1 active:scale-[0.98] 
-                flex items-center justify-center gap-4 
-                disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none
-                overflow-hidden
-            "
-          >
-            {/* Shine Effect */}
-            <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent z-0" />
-
-            <div className="relative z-10 flex items-center gap-3">
-              {status === 'loading' ? (
-                <Loader2 className="w-8 h-8 animate-spin" />
-              ) : (
-                <>
-                  <span className="drop-shadow-md">Garantir Minha Vaga</span>
-                  <ArrowRight className="w-6 h-6 md:w-8 md:h-8 group-hover:translate-x-1 transition-transform" />
-                </>
-              )}
-            </div>
-          </button>
-
-          <p className="text-center text-neutral-500 text-xs font-medium flex items-center justify-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-green-500/50"></span>
-            100% Livre de Spam. Seus dados estão seguros.
-          </p>
-        </form>
-      </div>
-
-      {/* SUCCESS MODAL OVERLAY */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 animate-fade-in">
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-black/90 backdrop-blur-sm"
-            onClick={handleCloseModal}
-          ></div>
-
-          {/* Modal Content */}
-          <div className="relative bg-neutral-900 border border-neutral-800 rounded-2xl p-8 max-w-md w-full text-center shadow-2xl shadow-green-900/20 scale-100 animate-in fade-in zoom-in duration-300">
-            <button
-              onClick={handleCloseModal}
-              className="absolute top-4 right-4 text-neutral-500 hover:text-white transition-colors"
-            >
-              <X className="w-6 h-6" />
-            </button>
-
-            <div className="flex justify-center mb-6">
-              <div className="bg-green-500/10 p-4 rounded-full">
-                <CheckCircle2 className="w-16 h-16 text-green-500" />
-              </div>
-            </div>
-
-            <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
-              Inscrição Confirmada!
-            </h3>
-
-            <p className="text-neutral-400 text-lg mb-8 leading-relaxed">
-              Enviamos o link de acesso exclusivo para o seu e-mail: <br />
-              <span className="text-white font-semibold">{email}</span>
-            </p>
-
-            <div className="bg-neutral-800/50 p-4 rounded-lg mb-6 text-sm text-neutral-400">
-              ⚠️ Verifique também sua caixa de <strong>Spam</strong> ou <strong>Promoções</strong>.
-            </div>
-
-            <button
-              onClick={handleCloseModal}
-              className="w-full py-4 bg-neutral-100 hover:bg-white text-black font-bold text-lg rounded-lg transition-colors"
-            >
-              Fechar
-            </button>
           </div>
         </div>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto mt-10 text-left">
+      <label htmlFor="email" className="label-mono text-chalk-mute mb-3 block">
+        Lembrete por e-mail (opcional)
+      </label>
+      <div className="flex gap-2">
+        <input
+          id="email"
+          type="email"
+          placeholder="seu@email.com"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            if (error) setError(null);
+          }}
+          disabled={status === 'loading'}
+          className={`flex-1 h-12 px-4 bg-ink-soft border rule rounded-none text-chalk placeholder:text-chalk-mute focus:outline-none focus:border-react/50 transition-colors ${error ? 'border-clay' : ''}`}
+        />
+        <button
+          type="submit"
+          disabled={status === 'loading'}
+          className="h-12 px-5 bg-chalk text-ink text-sm font-medium hover:bg-chalk-soft transition-colors flex items-center gap-2 disabled:opacity-60"
+        >
+          {status === 'loading' ? (
+            <Loader2 size={16} className="animate-spin" />
+          ) : (
+            <>
+              <Bell size={14} />
+              Receber lembrete
+            </>
+          )}
+        </button>
+      </div>
+      {error && (
+        <p className="text-clay text-xs mt-2 flex items-center gap-1.5">
+          <AlertCircle size={12} />
+          {error}
+        </p>
       )}
-    </>
+      <p className="text-xs text-chalk-mute mt-3 leading-relaxed">
+        Um e-mail por noite, durante a semana do evento. Nada antes, nada depois.
+        Excluído da base no dia 26 (sem confirmação necessária).
+      </p>
+    </form>
   );
 };

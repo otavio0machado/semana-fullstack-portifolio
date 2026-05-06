@@ -1,19 +1,51 @@
 import React from 'react';
-import { Lock } from 'lucide-react';
+import { EVENT } from '../constants';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="mt-16 pb-8 text-center border-t border-neutral-900 pt-8 w-full max-w-2xl mx-auto">
-      <div className="flex items-center justify-center gap-1 text-neutral-600 mb-4 text-sm">
-        <Lock className="w-3 h-3" />
-        <span>Seus dados estão seguros. Não enviamos spam.</span>
+    <footer className="mt-20 pt-10 pb-8 text-left border-t rule w-full max-w-3xl mx-auto">
+      <p className="label-mono text-chalk-mute mb-4">Sobre o evento</p>
+      <p className="text-[14px] text-chalk-soft leading-relaxed mb-6 max-w-2xl">
+        Semana React é gratuito, online e organizado por desenvolvedores ativos —
+        não é produto pago, não tem &ldquo;curso completo&rdquo; depois, não tem upsell.
+        Em {new Date().getFullYear() - 2}{' '}
+        a primeira edição teve {EVENT.registrationsLastEdition.toLocaleString('pt-BR')} inscrições.
+        A 3ª edição roda em outubro de 2026.
+      </p>
+
+      <div className="flex flex-col sm:flex-row gap-x-8 gap-y-3 text-xs text-chalk-mute">
+        <a
+          href="https://github.com/otavio0machado/semana-react"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-react transition-colors"
+        >
+          Código no GitHub
+        </a>
+        <a
+          href={EVENT.channelUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-react transition-colors"
+        >
+          Canal no YouTube (gravações de edições anteriores)
+        </a>
+        <a href="/lgpd.html" className="hover:text-react transition-colors">
+          Tratamento de e-mail (LGPD)
+        </a>
       </div>
-      <div className="flex justify-center gap-6 text-xs text-neutral-700">
-        <a href="#" className="hover:text-neutral-500 transition-colors">Termos de Uso</a>
-        <a href="#" className="hover:text-neutral-500 transition-colors">Política de Privacidade</a>
-      </div>
-      <p className="mt-4 text-neutral-800 text-[10px]">
-        © {new Date().getFullYear()} Semana FullStack. Todos os direitos reservados.
+
+      <p className="mt-8 text-[11px] text-chalk-mute font-mono">
+        © {new Date().getFullYear()} Semana React · iniciativa independente, não comercial · conteúdo deste site é fictício, parte de um{' '}
+        <a
+          href="https://github.com/otavio0machado/semana-fullstack-portifolio"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:text-chalk"
+        >
+          study case
+        </a>
+        .
       </p>
     </footer>
   );
